@@ -3,8 +3,12 @@ import { useStoreFavorite } from "@/store/favorite.store"
 import { Dishes } from "@/utils/data"
 import MenuCard from "@/components/menuCard/MenuCard"
 import Header from "@/components/header/Header"
+import Navbar from "@/components/navbar/Navbar"
+import { useState } from "react"
 
 export default function FavoritesPage() {
+    // MENU STATE
+    const [menuOpen, setMenuOpen] = useState(false);
 
   const { selectedFavoriteIds } = useStoreFavorite()
 
@@ -14,8 +18,8 @@ export default function FavoritesPage() {
 
   return (
     <main className="px-4 py-6 h-fit bg-white">
-      <Header/>
-      <h1 className="text-xl font-semibold mb-4 pt-30">Your Favorites</h1>
+      <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
+      <h1 className="text-xl font-semibold mb-4 pt-14">Your Favorites</h1>
 
       {favoriteItems.length === 0 ? (
         <p className="text-gray-500">You haven’t added any favorites yet.</p>
@@ -26,6 +30,7 @@ export default function FavoritesPage() {
           ))}
         </section>
       )}
+      <Navbar menuOpen={menuOpen} onCloseMenu={() => setMenuOpen(false)} />
     </main>
   )
 }

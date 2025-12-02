@@ -13,7 +13,7 @@ export default function MenuCard({ dish }) {
 
   return (
     <section className="relative">
-    <div className=" bg-white shadow-md overflow-hidden border border-gray-200 p-2 md:p-3 rounded-2xl">
+    <div className=" bg-white dark:bg-transparent dark:border-white/20 shadow-md overflow-hidden border border-gray-200 p-2 md:p-3 rounded-2xl dark:text-white">
       <div className="relative w-full h-40 ">
           <img 
             src={dish.image}

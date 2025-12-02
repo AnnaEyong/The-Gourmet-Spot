@@ -33,9 +33,11 @@ export default function Navbar({ menuOpen }) {
       {/* When expanded, show the rest */}
       {menuOpen && (
         <div className="flex justify-between flex-1">
+          <Link href='/'>
             <House strokeWidth={1.2} size={25} />
+          </Link>
 
-            <Link href='/favorites' className="relative">
+          <Link href='/favorites' className="relative">
             <Heart strokeWidth={1.2} size={25}/>
             <span className='bg-gray-50 text-black text-[.55rem] absolute w-3.5 h-3.5 flex items-center justify-center top-0.5 -right-1 rounded-full'>
               {favoriteSize}

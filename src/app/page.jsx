@@ -37,8 +37,8 @@ export default function Page() {
   const [animateOut, setAnimateOut] = useState(false)
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setAnimateOut(true), 2500)
-    const hideTimer = setTimeout(() => setShowSplash(false), 3000)
+    const fadeTimer = setTimeout(() => setAnimateOut(true), 1500)
+    const hideTimer = setTimeout(() => setShowSplash(false), 2000)
     return () => {
       clearTimeout(fadeTimer)
       clearTimeout(hideTimer)
@@ -54,7 +54,7 @@ export default function Page() {
   }
 
   return (
-    <main className='bg-white px-2 md:px-10'>
+    <main className='bg-white dark:bg-[#1a1a1a] px-2 md:px-10'>
 
       {/* Header gets toggle function */}
       <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
@@ -92,7 +92,7 @@ export default function Page() {
         </section>
 
         {/* SEARCH */}
-        <div className='flex gap-2 lg:hidden justify-between items-center mb-2 bg-gray-200 rounded-full pr-2 pl-4 py-2 w-full m-auto'>
+        <div className='flex gap-2 lg:hidden justify-between items-center mb-2 dark:text-white bg-gray-200 dark:bg-[#1a1a1a] dark:border border-white/10 rounded-full pr-2 pl-4 py-2 w-full m-auto'>
           <input 
             value={searchTerm} 
             onChange={(e) => setSearchTerm(e.target.value)} 

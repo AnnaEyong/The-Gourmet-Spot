@@ -5,14 +5,11 @@ import Navbar from "@/components/navbar/Navbar";
 import { useStoreCart } from "@/store/cart.store";
 import { Dishes } from "@/utils/data";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // for redirect
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
-  // 🔥 MENU STATE
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [tableNumber, setTableNumber] = useState("");
-
   const { selectedAddedIds, quantities, clearAll } = useStoreCart();
   const router = useRouter();
 
@@ -34,7 +31,6 @@ export default function CartPage() {
       return;
     }
 
-    // Build order items with quantities
     const orderItems = cartItems.map(dish => ({
       id: dish.id,
       image: dish.image,
@@ -46,7 +42,7 @@ export default function CartPage() {
     }));
 
     const order = {
-      id: Date.now().toString(), // unique ID
+      id: Date.now().toString(),
       tableNumber,
       items: orderItems,
       totalPrice,
@@ -54,15 +50,25 @@ export default function CartPage() {
       status: "Pending",
     };
 
-    // Save order to localStorage
-    localStorage.setItem("currentOrder", JSON.stringify(order));
+    // Save to orders array in localStorage
+    const allOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+    allOrders.push(order);
+    localStorage.setItem("orders", JSON.stringify(allOrders));
+
+    // Notify kitchen page instantly
+window.dispatchEvent(new Event("orders-updated"));
+
+    // Optionally, update "currentOrders" for this customer
+    const customerOrders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
+    customerOrders.push(order);
+    localStorage.setItem("customerOrders", JSON.stringify(customerOrders));
 
     // Clear cart and table number
     clearAll();
     setTableNumber("");
 
-    // Redirect to order page
-    router.push("/orders"); // change route if your order page is different
+    // Redirect to orders page
+    router.push("/orders");
   };
 
   return (
@@ -79,7 +85,6 @@ export default function CartPage() {
               <CartCard key={item.id} dish={item} />
             ))}
 
-            {/* Table Number Input */}
             <div className="mt-4">
               <label className="block font-semibold mb-1">Table Number:</label>
               <input
@@ -91,7 +96,6 @@ export default function CartPage() {
               />
             </div>
 
-            {/* Totals & Place Order */}
             <div className="mt-4 border-t border-gray-300 pt-4 flex justify-between items-center">
               <div>
                 <p className="font-bold text-lg">Total Price: ${totalPrice.toFixed(2)}</p>
