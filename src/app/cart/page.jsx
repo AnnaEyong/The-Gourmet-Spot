@@ -4,28 +4,40 @@ import CartCard from "@/components/menuCard/CartCard";
 import Navbar from "@/components/navbar/Navbar";
 import { useStoreCart } from "@/store/cart.store";
 import { Dishes } from "@/utils/data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 export default function CartPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState("");
   const { selectedAddedIds, quantities, clearAll } = useStoreCart();
   const router = useRouter();
-
   const cartItems = Dishes.filter(dish => selectedAddedIds.includes(dish.id));
 
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * (quantities[item.id] || 1),
     0
   );
-
   const totalPrepTime = cartItems.reduce(
     (sum, item) => sum + item.prepTime * (quantities[item.id] || 1),
     0
   );
 
-  const handlePlaceOrder = () => {
+  // Generate or retrieve anonymous customerId
+  const [customerId, setCustomerId] = useState("");
+  useEffect(() => {
+    let storedId = localStorage.getItem("customerId");
+    if (!storedId) {
+      storedId = uuidv4();
+      localStorage.setItem("customerId", storedId);
+    }
+    setCustomerId(storedId);
+  }, []);
+
+  const handlePlaceOrder = async () => {
     if (!tableNumber) {
       alert("Please enter your table number before placing the order.");
       return;
@@ -41,34 +53,24 @@ export default function CartPage() {
       prepTime: dish.prepTime,
     }));
 
-    const order = {
-      id: Date.now().toString(),
-      tableNumber,
-      items: orderItems,
-      totalPrice,
-      totalPrepTime,
-      status: "Pending",
-    };
+    try {
+      await addDoc(collection(db, "orders"), {
+        tableNumber,
+        items: orderItems,
+        totalPrice,
+        totalPrepTime,
+        status: "Pending",
+        customerId,
+        createdAt: serverTimestamp()
+      });
 
-    // Save to orders array in localStorage
-    const allOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-    allOrders.push(order);
-    localStorage.setItem("orders", JSON.stringify(allOrders));
-
-    // Notify kitchen page instantly
-window.dispatchEvent(new Event("orders-updated"));
-
-    // Optionally, update "currentOrders" for this customer
-    const customerOrders = JSON.parse(localStorage.getItem("customerOrders") || "[]");
-    customerOrders.push(order);
-    localStorage.setItem("customerOrders", JSON.stringify(customerOrders));
-
-    // Clear cart and table number
-    clearAll();
-    setTableNumber("");
-
-    // Redirect to orders page
-    router.push("/orders");
+      clearAll();
+      setTableNumber("");
+      router.push("/orders");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to place order. Try again.");
+    }
   };
 
   return (
@@ -76,15 +78,11 @@ window.dispatchEvent(new Event("orders-updated"));
       <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
       <div className="py-14">
         <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-
         {cartItems.length === 0 ? (
-          <p>Your cart is empty</p>
+          <p className="">Your cart is empty</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {cartItems.map(item => (
-              <CartCard key={item.id} dish={item} />
-            ))}
-
+            {cartItems.map(item => <CartCard key={item.id} dish={item} />)}
             <div className="mt-4">
               <label className="block font-semibold mb-1">Table Number:</label>
               <input
@@ -95,13 +93,10 @@ window.dispatchEvent(new Event("orders-updated"));
                 placeholder="Enter your table number"
               />
             </div>
-
             <div className="mt-4 border-t border-gray-300 pt-4 flex justify-between items-center">
               <div>
                 <p className="font-bold text-lg">Total Price: ${totalPrice.toFixed(2)}</p>
-                <p className="font-medium text-gray-600">
-                  Total Prep Time: {totalPrepTime} mins
-                </p>
+                <p className="font-medium text-gray-600">Total Prep Time: {totalPrepTime} mins</p>
               </div>
               <button
                 onClick={handlePlaceOrder}

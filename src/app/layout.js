@@ -1,6 +1,7 @@
 import { Urbanist } from 'next/font/google';
 import "./globals.css";
 import { ThemeProvider } from '@/components/theme-provider';
+import InitAuth from './initAuth';
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
   return (
      <html lang="en" suppressHydrationWarning className={urbanist.className}>
       <body className={urbanist.className}>
+        <InitAuth />
       <ThemeProvider attribute="class"
             defaultTheme="system"
             enableSystem
