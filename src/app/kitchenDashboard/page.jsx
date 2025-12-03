@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, onSnapshot, query, orderBy, doc, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp, getDocs } from "firebase/firestore";
 
 export default function KitchenPage() {
   const [orders, setOrders] = useState([]);
@@ -9,10 +9,8 @@ export default function KitchenPage() {
   useEffect(() => {
     const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, snapshot => {
-      const ordersData = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(order => order.status !== "Completed"); // only active orders
-      setOrders(ordersData);
+      const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setOrders(ordersData.filter(order => order.status !== "Completed")); // only active orders
     });
     return () => unsubscribe();
   }, []);
@@ -20,29 +18,25 @@ export default function KitchenPage() {
   const updateStatus = async (orderId, newStatus) => {
     try {
       const orderRef = doc(db, "orders", orderId);
-      await updateDoc(orderRef, { status: newStatus });
+      const updateData = { status: newStatus };
+
+      // Set completedAt if status is Completed
+      if (newStatus === "Completed") {
+        updateData.completedAt = serverTimestamp();
+      }
+
+      await updateDoc(orderRef, updateData);
     } catch (err) {
       console.error("Failed to update status:", err);
       alert("Failed to update order status.");
     }
   };
 
-  const clearAllOrders = async () => {
+  const clearAllOrders = () => {
     if (!confirm("Are you sure you want to clear all orders?")) return;
 
-    try {
-      // Optimistically remove from dashboard
-      setOrders([]);
-
-      // Mark all orders as Completed in Firestore
-      const allOrdersSnapshot = await collection(db, "orders").get();
-      allOrdersSnapshot.docs.forEach(async (docItem) => {
-        await updateDoc(doc(db, "orders", docItem.id), { status: "Completed" });
-      });
-    } catch (err) {
-      console.error("Failed to clear orders:", err);
-      alert("Failed to clear orders. Try again.");
-    }
+    // Optimistically remove all orders from dashboard
+    setOrders([]);
   };
 
   return (
@@ -58,7 +52,7 @@ export default function KitchenPage() {
       </div>
 
       {orders.length === 0 ? (
-        <p className="text-gray-600 text-lg">No orders yet.</p>
+        <p className="text-gray-600 text-lg">No active orders.</p>
       ) : (
         <div className="flex flex-col gap-8">
           {orders.map(order => {
@@ -75,6 +69,11 @@ export default function KitchenPage() {
                   }`}>
                     {order.status}
                   </span>
+                </div>
+
+                <div className="mb-2 text-sm text-gray-600">
+                  <p>Placed At: {order.createdAt?.toDate().toLocaleString()}</p>
+                  {order.completedAt && <p>Completed At: {order.completedAt.toDate().toLocaleString()}</p>}
                 </div>
 
                 <table className="w-full text-left border-collapse">
