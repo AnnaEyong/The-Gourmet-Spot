@@ -3,58 +3,49 @@ import { useEffect, useState } from "react";
 import Header from "@/components/header/Header";
 import Navbar from "@/components/navbar/Navbar";
 import { db } from "@/lib/firebase";
-import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
 export default function OrderStatusPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [customerId, setCustomerId] = useState("");
 
-useEffect(() => {
-  const storedId = localStorage.getItem("customerId");
+  useEffect(() => {
+    // Get customerId from localStorage (set when they place order)
+    const storedId = localStorage.getItem("customerId");
+    if (!storedId) return;
+    setCustomerId(storedId);
 
-  // If no customerId, wait & check again
-  if (!storedId) {
-    const interval = setInterval(() => {
-      const checkId = localStorage.getItem("customerId");
-      if (checkId) {
-        setCustomerId(checkId);
-        clearInterval(interval);
-      }
-    }, 300);
-    return;
-  }
+    // Listen to orders for this customer in real-time
+    const ordersRef = collection(db, "orders");
+    const q = query(
+      ordersRef,
+      where("customerId", "==", storedId),
+      orderBy("createdAt", "desc")
+    );
 
-  setCustomerId(storedId);
+    const unsubscribe = onSnapshot(q, snapshot => {
+      const activeOrders = snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(order => order.status !== "Completed"); // remove completed
+      setOrders(activeOrders);
+    });
 
-  const q = query(
-    collection(db, "orders"),
-    where("customerId", "==", storedId),
-    orderBy("createdAt", "desc")
-  );
+    return () => unsubscribe();
+  }, []);
 
-  const unsubscribe = onSnapshot(q, snapshot => {
-    const activeOrders = snapshot.docs
-      .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(order => order.status !== "Completed");
-    setOrders(activeOrders);
-  });
-
-  return () => unsubscribe();
-}, []);
-
-
-  if (orders.length === 0)
+  if (orders.length === 0) {
     return (
       <main className="container mx-auto p-4">
         <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
-        <div className="h-screen flex flex-col justify-center items-center">
+        <div className="py-14 text-center">
           <h1 className="text-2xl font-bold mb-4">No Active Orders</h1>
           <p className="text-gray-600">You currently have no ongoing orders.</p>
         </div>
         <Navbar menuOpen={menuOpen} onCloseMenu={() => setMenuOpen(false)} />
       </main>
     );
+  }
 
   return (
     <main className="container mx-auto p-4">

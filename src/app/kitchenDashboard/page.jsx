@@ -1,20 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, query, orderBy, onSnapshot, updateDoc, doc } from "firebase/firestore";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { collection, onSnapshot, query, orderBy, doc, updateDoc } from "firebase/firestore";
 
 export default function KitchenPage() {
   const [orders, setOrders] = useState([]);
-
-  // inside component:
-useEffect(() => {
-  const unsub = onAuthStateChanged(auth, user => {
-    if (!user) window.location.href = "/login";
-  });
-  return () => unsub();
-}, []);
 
   useEffect(() => {
     const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
@@ -22,7 +12,6 @@ useEffect(() => {
       const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setOrders(ordersData);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -31,14 +20,32 @@ useEffect(() => {
       const orderRef = doc(db, "orders", orderId);
       await updateDoc(orderRef, { status: newStatus });
     } catch (err) {
-      console.error(err);
-      alert("Failed to update status.");
+      console.error("Failed to update status:", err);
+      alert("Failed to update order status.");
+    }
+  };
+
+  const clearAllOrders = async () => {
+    if (confirm("Are you sure you want to clear all orders?")) {
+      for (let order of orders) {
+        const orderRef = doc(db, "orders", order.id);
+        await updateDoc(orderRef, { status: "Completed" });
+      }
     }
   };
 
   return (
     <main className="container mx-auto p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-bold mb-6">Kitchen Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-4xl font-bold text-gray-800">Kitchen Dashboard</h1>
+        <button
+          onClick={clearAllOrders}
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow"
+        >
+          Clear All Orders
+        </button>
+      </div>
+
       {orders.length === 0 ? (
         <p className="text-gray-600 text-lg">No orders yet.</p>
       ) : (
@@ -54,7 +61,9 @@ useEffect(() => {
                     order.status === "Preparing" ? "bg-yellow-300 text-yellow-900" :
                     order.status === "Ready" ? "bg-green-300 text-green-900" :
                     "bg-gray-400 text-white"
-                  }`}>{order.status}</span>
+                  }`}>
+                    {order.status}
+                  </span>
                 </div>
 
                 <table className="w-full text-left border-collapse">
@@ -92,7 +101,8 @@ useEffect(() => {
                       className={`flex-1 px-3 py-2 rounded font-semibold text-sm transition-colors duration-200
                         ${status === "Preparing" ? "bg-yellow-500 text-white hover:bg-yellow-600" : ""}
                         ${status === "Ready" ? "bg-green-500 text-white hover:bg-green-600" : ""}
-                        ${status === "Completed" ? "bg-gray-700 text-white hover:bg-gray-800" : ""}`}
+                        ${status === "Completed" ? "bg-gray-700 text-white hover:bg-gray-800" : ""}
+                      `}
                     >
                       {status}
                     </button>
