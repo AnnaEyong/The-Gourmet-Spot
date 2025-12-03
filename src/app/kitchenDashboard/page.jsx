@@ -9,7 +9,9 @@ export default function KitchenPage() {
   useEffect(() => {
     const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, snapshot => {
-      const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const ordersData = snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(order => order.status !== "Completed"); // only active orders
       setOrders(ordersData);
     });
     return () => unsubscribe();
@@ -26,11 +28,20 @@ export default function KitchenPage() {
   };
 
   const clearAllOrders = async () => {
-    if (confirm("Are you sure you want to clear all orders?")) {
-      for (let order of orders) {
-        const orderRef = doc(db, "orders", order.id);
-        await updateDoc(orderRef, { status: "Completed" });
-      }
+    if (!confirm("Are you sure you want to clear all orders?")) return;
+
+    try {
+      // Optimistically remove from dashboard
+      setOrders([]);
+
+      // Mark all orders as Completed in Firestore
+      const allOrdersSnapshot = await collection(db, "orders").get();
+      allOrdersSnapshot.docs.forEach(async (docItem) => {
+        await updateDoc(doc(db, "orders", docItem.id), { status: "Completed" });
+      });
+    } catch (err) {
+      console.error("Failed to clear orders:", err);
+      alert("Failed to clear orders. Try again.");
     }
   };
 
