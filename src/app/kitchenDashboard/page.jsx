@@ -2,8 +2,13 @@
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import Link from "next/link";
+import { getAuth, signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function KitchenPage() {
+  const router = useRouter();
+  const auth = getAuth();
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -38,23 +43,49 @@ export default function KitchenPage() {
     // Optimistically remove all orders from dashboard
     setOrders([]);
   };
+  
+    const handleLogout = async () => {
+      try {
+        await signOut(auth);
+        router.push("/login"); // redirect to your login page
+      } catch (error) {
+        console.error("Logout failed:", error);
+        alert("Failed to log out.");
+      }
+    };
 
   return (
-    <main className="container mx-auto p-6 bg-gray-50 min-h-screen">
+    <main className="container mx-auto py-6 px-10 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold text-gray-800">Kitchen Dashboard</h1>
-        <button
-          onClick={clearAllOrders}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold shadow"
-        >
-          Clear All Orders
-        </button>
+        <div className="flex gap-2">
+            <Link
+              href="/archive"
+              className="cursor-pointer transition ease-in-out duration-300 hover:bg-gray-500 bg-gray-100 px-4 py-2 rounded-lg border border-gray-300"
+            >
+              Archives
+            </Link>
+
+            <button
+              onClick={clearAllOrders}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold shadow"
+            >
+              Clear All Orders
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="cursor-pointer bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-lg font-semibold shadow"
+            >
+              Logout
+            </button>
+        </div>
       </div>
 
       {orders.length === 0 ? (
         <p className="text-gray-600 text-lg">No active orders.</p>
       ) : (
-        <div className="flex flex-col gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {orders.map(order => {
             const totalPrice = order.items.reduce((sum, item) => sum + item.price * item.qty, 0);
             return (

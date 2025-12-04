@@ -36,9 +36,10 @@ export default function LoginPage() {
             type="email"
             name="email"
             value={form.email}
+            placeholder='Enter your email'
             onChange={handleChange}
             required
-            className="w-full p-2 border rounded-lg mt-1"
+            className="w-full p-2 border rounded-lg mt-1 text-sm"
           />
         </label>
 
@@ -49,9 +50,10 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
+              placeholder='Enter your password'
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg mt-1"
+              className="w-full p-2 border rounded-lg mt-1 text-sm"
             />
 
             <span

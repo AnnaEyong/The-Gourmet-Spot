@@ -43,9 +43,10 @@ export default function SignupPage() {
             type="text"
             name="name"
             value={form.name}
+            placeholder='John Doe'
             onChange={handleChange}
             required
-            className="w-full p-2 border rounded-lg mt-1"
+            className="w-full p-2 border rounded-lg mt-1 text-sm"
           />
         </label>
 
@@ -55,9 +56,10 @@ export default function SignupPage() {
             type="email"
             name="email"
             value={form.email}
+            placeholder='example@gmail.com'
             onChange={handleChange}
             required
-            className="w-full p-2 border rounded-lg mt-1"
+            className="w-full p-2 border rounded-lg mt-1 text-sm"
           />
         </label>
 
@@ -68,9 +70,10 @@ export default function SignupPage() {
               type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
+              placeholder='John@1234'
               onChange={handleChange}
               required
-              className="w-full p-2 border rounded-lg mt-1"
+              className="w-full p-2 border rounded-lg mt-1 text-sm"
             />
 
             <span
