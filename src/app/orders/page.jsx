@@ -48,13 +48,13 @@ export default function OrderStatusPage() {
   }
 
   return (
-    <main className="container mx-auto p-4">
+    <main className="container mx-auto p-4 dark:bg-black min-h-screen">
       <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
-      <div className="py-14 flex flex-col gap-8">
-        <h1 className="text-2xl font-bold -mb-4">Your Orders</h1>
+      <div className="py-18 flex flex-col gap-8">
+        <h1 className="text-2xl font-bold -mb-4 dark:text-white">Your Orders</h1>
         {orders.map(order => (
-          <div key={order.id} className="border border-gray-300 rounded-xl p-4 bg-white shadow-sm">
-            <div className="flex justify-between text-lg mb-4">
+          <div key={order.id} className="border border-gray-300 dark:border-white/10 rounded-xl p-4 bg-white dark:bg-transparent shadow-sm">
+            <div className="flex justify-between text-lg mb-4 dark:text-white">
               <p>Table Number: <strong>{order.tableNumber}</strong></p>
               <p>Status: <strong className={
                 order.status === "Ready" ? "text-green-500" :
@@ -64,7 +64,7 @@ export default function OrderStatusPage() {
             </div>
             <div className="flex flex-col gap-2">
               {order.items.map(item => (
-                <div key={item.id} className="grid grid-cols-[1.5fr_2fr_1fr] gap-2 items-center border border-gray-200 rounded-xl p-2">
+                <div key={item.id} className="grid grid-cols-[1.5fr_2fr_1fr] gap-2 items-center border border-gray-200 dark:border-white/10 dark:text-white rounded-xl p-2">
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover rounded-xl" />
                   <div>
                     <p>{item.name}</p>
@@ -77,7 +77,7 @@ export default function OrderStatusPage() {
                 </div>
               ))}
             </div>
-            <div className="mt-4 border-t border-gray-300 pt-4">
+            <div className="mt-4 border-t border-gray-300 dark:border-white/10 dark:text-white pt-4">
               <p className="font-bold">Total Price: ${order.totalPrice.toFixed(2)}</p>
               <p className="font-medium text-gray-600">Total Prep Time: {order.totalPrepTime} mins</p>
             </div>

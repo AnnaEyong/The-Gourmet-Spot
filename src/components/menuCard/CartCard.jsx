@@ -151,7 +151,7 @@ const qty = quantities[dish.id] || 1; // no more error
 
 
   return (
-    <div className="grid grid-cols-[150px_1fr_40px] gap-3 items-start bg-gray-50 border border-gray-300 rounded-2xl p-2 ">
+    <div className="grid grid-cols-[150px_1fr_40px] gap-3 items-start bg-gray-50 dark:bg-transparent border border-gray-300 dark:border-white/10 rounded-2xl p-2 ">
 
       {/* === COL 1: IMAGE === */}
       <div className="w-full h-full rounded-xl overflow-hidden">
@@ -163,7 +163,7 @@ const qty = quantities[dish.id] || 1; // no more error
       </div>
 
       {/* === COL 2: DETAILS === */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 dark:text-white">
         <h2 className="font-semibold text-[1rem]">
           {dish.name}
         </h2>
@@ -177,10 +177,10 @@ const qty = quantities[dish.id] || 1; // no more error
         </p>
 
         {/* Quantity Controller */}
-        <div className="flex items-center gap-3 mt-1">
+        <div className="flex items-center gap-3 mt-1 dark:text-white">
           <button 
             onClick={() => decreaseQty(dish.id)}
-            className="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-lg"
+            className="w-7 h-7 bg-gray-200 dark:bg-[#1a1a1a] rounded-full flex items-center justify-center text-lg"
           >
             –
           </button>
@@ -189,7 +189,7 @@ const qty = quantities[dish.id] || 1; // no more error
 
           <button 
             onClick={() => increaseQty(dish.id)}
-            className="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center text-lg"
+            className="w-7 h-7 bg-gray-200 dark:bg-[#1a1a1a] rounded-full flex items-center justify-center text-lg"
           >
             +
           </button>
@@ -205,7 +205,7 @@ const qty = quantities[dish.id] || 1; // no more error
           <X className="text-gray-600 hover:text-red-500 cursor-pointer" size={20}/>
         </button>
 
-        <p className="text-[13px] text-green-500">{dish.prepTime} min</p>
+        <p className="text-[13px] text-green-500">{dish.prepTime} mins</p>
       </div>
 
     </div>

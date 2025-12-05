@@ -72,31 +72,35 @@ export default function CartPage() {
   };
 
   return (
-    <main className="container mx-auto p-4 h-fit bg-white">
+    <main className="container mx-auto p-4 h-fit bg-white dark:bg-black min-h-screen">
       <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
       <div className="py-14">
-        <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
 
         {cartItems.length === 0 ? (
-          <p>Your cart is empty</p>
+          <div className="h-screen flex flex-col items-center justify-center">
+        <h1 className="text-xl font-semibold mb-4">Your Cart</h1>
+        <p className="text-gray-500">Your cart is empty</p>
+      </div>
         ) : (
+          <>
+          <h1 className="text-xl font-semibold mb-4 pt-3 dark:text-white">Your Cart</h1>
           <div className="flex flex-col gap-4">
             {cartItems.map(item => (
               <CartCard key={item.id} dish={item} />
             ))}
 
-            <div className="mt-4">
+            <div className="mt-4 dark:text-white">
               <label className="block font-semibold mb-1">Table Number:</label>
               <input
                 type="text"
                 value={tableNumber}
                 onChange={(e) => setTableNumber(e.target.value)}
-                className="border border-gray-300 p-2 rounded-xl w-full"
+                className="border border-gray-300 dark:border-white/10 p-2 rounded-xl w-full"
                 placeholder="Enter your table number"
               />
             </div>
 
-            <div className="mt-4 border-t border-gray-300 pt-4 flex justify-between items-center">
+            <div className="mt-4 border-t border-gray-300 dark:border-white/10 dark:text-white pt-4 flex justify-between items-center">
               <div>
                 <p className="font-bold text-lg">Total Price: ${totalPrice.toFixed(2)}</p>
                 <p className="font-medium text-gray-600">
@@ -111,6 +115,7 @@ export default function CartPage() {
               </button>
             </div>
           </div>
+          </>
         )}
       </div>
       <Navbar menuOpen={menuOpen} onCloseMenu={() => setMenuOpen(false)} />

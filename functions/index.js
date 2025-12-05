@@ -36,22 +36,23 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-// HTTPS function to set kitchen role
+// Example: Add a kitchen role to a user by email
 exports.addKitchenRole = functions.https.onCall(async (data, context) => {
-  const { uid } = data;
-
-  // Only allow authenticated admins to call this (optional)
-  if (!context.auth) {
+  // Optional: Only allow admin users to call this
+  if (context.auth?.token.role !== "admin") {
     throw new functions.https.HttpsError(
-      "unauthenticated",
-      "Only authenticated users can assign roles."
+      "permission-denied",
+      "Only admins can set roles"
     );
   }
 
+  const email = data.email;
   try {
-    await admin.auth().setCustomUserClaims(uid, { role: "kitchen" });
-    return { message: `Kitchen role set for UID: ${uid}` };
-  } catch (err) {
-    throw new functions.https.HttpsError("internal", err.message);
+    const user = await admin.auth().getUserByEmail(email);
+    await admin.auth().setCustomUserClaims(user.uid, { role: "kitchen" });
+    return { message: `Kitchen role assigned to ${email}` };
+  } catch (error) {
+    throw new functions.https.HttpsError("unknown", error.message);
   }
 });
+

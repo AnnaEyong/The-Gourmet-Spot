@@ -1,82 +1,102 @@
 "use client";
 import { useState } from "react";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, form.email, form.password);
 
-      window.location.href = "/kitchenDashboard"; // everyone logged in = kitchen staff
+    if (!email.trim() || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const user = userCredential.user;
+
+      // Fetch role from Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        alert("User not found.");
+        setLoading(false);
+        return;
+      }
+
+      const role = userDoc.data().role;
+
+      // Redirect based on role
+      if (role === "admin") {
+        router.push("/admin");
+      } else if (role === "kitchen") {
+        router.push("/kitchenDashboard");
+      } else {
+        router.push("/"); // fallback, e.g., customer page
+      }
     } catch (err) {
-      console.error(err);
-      alert("Login failed: " + err.message);
+      console.error("Login failed:", err);
+      switch (err.code) {
+        case "auth/invalid-email":
+          alert("Invalid email format.");
+          break;
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          alert("Incorrect email or password.");
+          break;
+        case "auth/user-disabled":
+          alert("This account has been disabled.");
+          break;
+        default:
+          alert("Login failed. Please check your credentials.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 rounded-2xl shadow-md w-full max-w-sm"
-      >
-        <h1 className="text-2xl font-bold mb-6 text-center">Kitchen Login</h1>
+    <main className="flex justify-center items-center min-h-screen bg-gray-100  relative">
+      <img src="/image.jpg" alt="Background" className="fixed inset-0 w-full h-full  object-cover z-0" />
+      <div className='absolute backdrop-blur-xs w-full h-full flex justify-center items-center z-10'>
+      <form onSubmit={handleLogin} className="bg-white/30 backdrop-blur-2xl p-8 rounded-xl shadow-md text-md w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
 
-        <label className="block mb-3">
-          <span className="font-medium">Email</span>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            placeholder='Enter your email'
-            onChange={handleChange}
-            required
-            className="w-full p-2 border rounded-lg mt-1 text-sm"
-          />
-        </label>
+        <input
+          type="email"
+          placeholder="example@gmail.com"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          className="border p-2 rounded w-full mb-4"
+          required
+        />
 
-        <label className="block mb-5">
-          <span className="font-medium">Password</span>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={form.password}
-              placeholder='Enter your password'
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded-lg mt-1 text-sm"
-            />
-
-            <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 cursor-pointer text-gray-600"
-            >
-              {showPassword ? "🙈" : "👁️"}
-            </span>
-          </div>
-        </label>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="border p-2 rounded w-full mb-4"
+          required
+        />
 
         <button
           type="submit"
-          className="w-full bg-black text-white p-2 rounded-lg hover:bg-gray-800 transition"
+          className={`w-full bg-[#8e0909] text-white px-4 py-2 rounded-lg ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+          disabled={loading}
         >
-          Log In
+          {loading ? "Logging in..." : "Login"}
         </button>
-
-        <p className="text-center text-sm mt-4">
-          Don’t have an account?{" "}
-          <a href="/signup" className="text-blue-600">Sign Up</a>
-        </p>
       </form>
+      </div>
     </main>
   );
 }

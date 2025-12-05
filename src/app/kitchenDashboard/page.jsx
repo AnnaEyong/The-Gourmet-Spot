@@ -5,6 +5,8 @@ import { collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp
 import Link from "next/link";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import LogoutButton from "@/components/LogoutButton";
 
 export default function KitchenPage() {
   const router = useRouter();
@@ -55,6 +57,7 @@ export default function KitchenPage() {
     };
 
   return (
+    <ProtectedRoute allowedRoles={['kitchen', 'admin']}>
     <main className="container mx-auto py-6 px-10 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold text-gray-800">Kitchen Dashboard</h1>
@@ -66,19 +69,14 @@ export default function KitchenPage() {
               Archives
             </Link>
 
-            <button
+            {/* <button
               onClick={clearAllOrders}
               className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold shadow"
             >
               Clear All Orders
-            </button>
+            </button> */}
 
-            <button
-              onClick={handleLogout}
-              className="cursor-pointer bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-lg font-semibold shadow"
-            >
-              Logout
-            </button>
+            <LogoutButton onLogout={handleLogout} />
         </div>
       </div>
 
@@ -88,6 +86,11 @@ export default function KitchenPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {orders.map(order => {
             const totalPrice = order.items.reduce((sum, item) => sum + item.price * item.qty, 0);
+             const totalPrepTime = order.items.reduce(
+              (sum, item) => sum + item.prepTime * item.qty,
+              0
+            );
+
             return (
               <div key={order.id} className="bg-white shadow-lg rounded-xl border border-gray-200 p-5">
                 <div className="flex justify-between items-center mb-4">
@@ -103,8 +106,8 @@ export default function KitchenPage() {
                 </div>
 
                 <div className="mb-2 text-sm text-gray-600">
-                  <p>Placed At: {order.createdAt?.toDate().toLocaleString()}</p>
-                  {order.completedAt && <p>Completed At: {order.completedAt.toDate().toLocaleString()}</p>}
+                  <p className="text-blue-600">Placed At: {order.createdAt?.toDate().toLocaleString()}</p>
+                  {order.completedAt && <p className="text-green-500">Completed At: {order.completedAt.toDate().toLocaleString()}</p>}
                 </div>
 
                 <table className="w-full text-left border-collapse">
@@ -114,6 +117,7 @@ export default function KitchenPage() {
                       <th className="pb-2">Qty</th>
                       <th className="pb-2">Price/unit</th>
                       <th className="pb-2">Total</th>
+                      <th className="pb-2">PrepTime</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -123,15 +127,19 @@ export default function KitchenPage() {
                         <td className="py-2">{item.qty}</td>
                         <td className="py-2">${item.price.toFixed(2)}</td>
                         <td className="py-2">${(item.price * item.qty).toFixed(2)}</td>
+                        <td className="py-2">{item.prepTime * item.qty} mins</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr>
-                      <td colSpan="3" className="font-bold text-right py-2">Total:</td>
-                      <td className="font-bold py-2">${totalPrice.toFixed(2)}</td>
-                    </tr>
-                  </tfoot>
+                      <tr> 
+                        <td></td>
+                        <td></td>
+                        <td className="font-bold py-2 text-left">Total:</td>
+                        <td className="font-bold py-2">${totalPrice.toFixed(2)}</td>
+                        <td className="font-bold py-2">{totalPrepTime} mins</td>
+                      </tr>
+                    </tfoot>
                 </table>
 
                 <div className="flex gap-2 mt-4">
@@ -155,5 +163,6 @@ export default function KitchenPage() {
         </div>
       )}
     </main>
+    </ProtectedRoute>
   );
 }

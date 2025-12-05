@@ -54,7 +54,7 @@ export default function Page() {
   }
 
   return (
-    <main className='bg-white dark:bg-[#1a1a1a] px-2 md:px-10'>
+    <main className='bg-white dark:bg-black px-2 md:px-10'>
 
       {/* Header gets toggle function */}
       <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
@@ -74,7 +74,7 @@ export default function Page() {
           <div className='flex justify-between gap-1.5 py-1.5 px-2 rounded-lg'>
             <button 
               onClick={() => setSelectedType(null)} 
-              className='bg-gray-200 text-gray-700 flex gap-2 items-center justify-center py-2 px-5 text-[.8rem] cursor-pointer rounded-full hover:bg-[#7c0505] hover:text-white focus:bg-[#7c0505] focus:text-white duration-400 ease-in-out' 
+              className='bg-gray-200 dark:bg-[#1a1a1a] dark:border border-white/10 text-gray-700 dark:text-white flex gap-2 items-center justify-center py-2 px-5 text-[.8rem] cursor-pointer rounded-full hover:bg-[#7c0505] hover:text-white focus:bg-[#7c0505] focus:text-white duration-400 ease-in-out' 
               id='all'
             >
               All
@@ -83,7 +83,7 @@ export default function Page() {
               <button 
                 onClick={() => setSelectedType(item.type)} 
                 key={item.id} 
-                className='bg-gray-200 inline-block whitespace-nowrap text-gray-700 gap-2 items-center justify-center py-2 px-5 text-[.8rem] cursor-pointer rounded-full hover:bg-[#7c0505] hover:text-white focus:bg-[#7c0505] focus:text-white duration-300 ease-in-out'
+                className='bg-gray-200 dark:bg-[#1a1a1a] dark:border border-white/10 dark:text-white inline-block whitespace-nowrap text-gray-700 gap-2 items-center justify-center py-2 px-5 text-[.8rem] cursor-pointer rounded-full hover:bg-[#7c0505] hover:text-white focus:bg-[#7c0505] focus:text-white duration-300 ease-in-out'
               > 
                 {item.type}
               </button>
@@ -92,7 +92,7 @@ export default function Page() {
         </section>
 
         {/* SEARCH */}
-        <div className='flex gap-2 lg:hidden justify-between items-center mb-2 dark:text-white bg-gray-200 dark:bg-[#1a1a1a] dark:border border-white/10 rounded-full pr-2 pl-4 py-2 w-full m-auto'>
+        <div className='flex gap-2 lg:hidden justify-between items-center mb-2 dark:text-white bg-gray-200 dark:bg-transparent dark:border border-white/10 rounded-full pr-2 pl-4 py-2 w-full m-auto'>
           <input 
             value={searchTerm} 
             onChange={(e) => setSearchTerm(e.target.value)} 

@@ -1,6 +1,6 @@
 import { useStoreCart } from '@/store/cart.store'
 import { useStoreFavorite } from '@/store/favorite.store'
-import { ChefHat, Heart, House, ShoppingCart, UserRound } from 'lucide-react'
+import { ChefHat, Heart, House, ListOrdered, ShoppingCart, UserRound } from 'lucide-react'
 import React from 'react'
 import Link from 'next/link'; 
 
@@ -52,7 +52,7 @@ export default function Navbar({ menuOpen }) {
           </Link>
 
           <Link href='/orders'>
-            <UserRound strokeWidth={1.2} size={25} />
+            <ListOrdered strokeWidth={1.2} size={25} />
           </Link>
         </div>
       )}
