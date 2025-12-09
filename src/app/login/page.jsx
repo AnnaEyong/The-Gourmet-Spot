@@ -4,12 +4,14 @@ import { auth, db } from "@/lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { Eye, EyeClosed } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,6 +35,7 @@ export default function LoginPage() {
       }
 
       const role = userDoc.data().role;
+      setShowPassword(false);
 
       // Redirect based on role
       if (role === "admin") {
@@ -81,14 +84,23 @@ export default function LoginPage() {
           required
         />
 
+      <div className="relative">
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
           className="border border-black/20 bg-white/30 p-2 rounded-xl w-full mb-4 text-black"
           required
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-2 top-2 text-gray-600 dark:text-white"
+        >
+          {showPassword ? <EyeClosed className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+        </button>
+      </div>
 
         <button
           type="submit"

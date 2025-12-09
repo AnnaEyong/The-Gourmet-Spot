@@ -14,7 +14,7 @@ export const generateQRCodeDataUrl = async (data) => {
     });
 };
 
-generateQRCodeDataUrl('THE GOURMET SPOT').then(url => {
+generateQRCodeDataUrl('https://the-gourmet-spot.vercel.app').then(url => {
     console.log(url); // Affiche le Data URL du QR Code
 }).catch(err => {
     console.error('Erreur lors de la gÃŠnÃ¨ration du QR Code :', err);
