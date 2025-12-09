@@ -7,6 +7,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LogoutButton from "@/components/LogoutButton";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export default function KitchenPage() {
   const router = useRouter();
@@ -58,16 +59,11 @@ export default function KitchenPage() {
 
   return (
     <ProtectedRoute allowedRoles={['kitchen', 'admin']}>
-    <main className="container mx-auto py-6 px-10 bg-gray-50 min-h-screen">
+    <main className="container mx-auto py-6 px-10 bg-white dark:bg-black dark:text-white min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold text-gray-800">Kitchen Dashboard</h1>
+        <h1 className="text-4xl font-bold text-gray-800 dark:text-white">Kitchen Dashboard</h1>
         <div className="flex gap-2">
-            <Link
-              href="/archive"
-              className="cursor-pointer transition ease-in-out duration-300 hover:bg-gray-500 bg-gray-100 px-4 py-2 rounded-lg border border-gray-300"
-            >
-              Archives
-            </Link>
+            <ModeToggle />
 
             {/* <button
               onClick={clearAllOrders}
@@ -81,7 +77,7 @@ export default function KitchenPage() {
       </div>
 
       {orders.length === 0 ? (
-        <p className="text-gray-600 text-lg">No active orders.</p>
+        <p className="text-gray-600 dark:text-white text-lg">No active orders.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {orders.map(order => {
@@ -92,7 +88,7 @@ export default function KitchenPage() {
             );
 
             return (
-              <div key={order.id} className="bg-white shadow-lg rounded-xl border border-gray-200 p-5">
+              <div key={order.id} className="bg-white dark:bg-gray-900 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 px-5 pt-5 pb-20 relative">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-2xl font-semibold">Table {order.tableNumber}</h2>
                   <span className={`px-3 py-1 rounded-full font-medium ${
@@ -112,7 +108,7 @@ export default function KitchenPage() {
 
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-300">
+                    <tr className="border-b border-gray-300 dark:border-gray-700">
                       <th className="pb-2">Name</th>
                       <th className="pb-2">Qty</th>
                       <th className="pb-2">Price/unit</th>
@@ -122,7 +118,7 @@ export default function KitchenPage() {
                   </thead>
                   <tbody>
                     {order.items.map(item => (
-                      <tr key={item.id} className="border-b border-gray-200">
+                      <tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
                         <td className="py-2">{item.name}</td>
                         <td className="py-2">{item.qty}</td>
                         <td className="py-2">${item.price.toFixed(2)}</td>
@@ -142,12 +138,12 @@ export default function KitchenPage() {
                     </tfoot>
                 </table>
 
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 absolute bottom-5 left-5 right-5">
                   {["Preparing", "Ready", "Completed"].map(status => (
                     <button
                       key={status}
                       onClick={() => updateStatus(order.id, status)}
-                      className={`flex-1 px-3 py-2 rounded font-semibold text-sm transition-colors duration-200
+                      className={`flex-1 px-3 py-2 rounded font-semibold text-sm cursor-pointer transition-colors duration-200
                         ${status === "Preparing" ? "bg-yellow-500 text-white hover:bg-yellow-600" : ""}
                         ${status === "Ready" ? "bg-green-500 text-white hover:bg-green-600" : ""}
                         ${status === "Completed" ? "bg-gray-700 text-white hover:bg-gray-800" : ""}

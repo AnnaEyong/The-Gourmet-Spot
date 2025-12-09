@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { Frown } from "lucide-react";
 
 export default function CartPage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -77,9 +78,9 @@ export default function CartPage() {
       <div className="py-14">
 
         {cartItems.length === 0 ? (
-          <div className="h-screen flex flex-col items-center justify-center">
-        <h1 className="text-xl font-semibold mb-4">Your Cart</h1>
-        <p className="text-gray-500">Your cart is empty</p>
+          <div className="h-screen fixed top-0 bottom-0 left-0 right-0 flex flex-col gap-3 items-center justify-center text-black dark:text-white">
+             <Frown strokeWidth={2} size={150} />
+        <p className="flex gap-2 items-center text-lg font-medium">Your cart is empty</p>
       </div>
         ) : (
           <>

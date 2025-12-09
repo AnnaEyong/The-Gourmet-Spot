@@ -64,18 +64,20 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex justify-center items-center min-h-screen bg-gray-100  relative">
-      <img src="/image.jpg" alt="Background" className="fixed inset-0 w-full h-full  object-cover z-0" />
-      <div className='absolute backdrop-blur-xs w-full h-full flex justify-center items-center z-10'>
-      <form onSubmit={handleLogin} className="bg-white/30 backdrop-blur-2xl p-8 rounded-xl shadow-md text-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
+    <main className="flex items-center justify-center min-h-screen bg-cover bg-center bg-white dark:bg-black relative"
+      style={{ backgroundImage: "url('/img.jpg')" }}
+    >
+      
+      <div className='absolute backdrop-blur-[1px] w-full h-full flex justify-center items-center z-10'>
+      <form onSubmit={handleLogin} className="bg-black/50 border border-white/30 p-8 rounded-xl shadow-2xl text-md w-full max-w-md">
+        <h1 className="text-2xl font-medium mb-4 text-white flex justify-center items-center">Login to<span><img src="logo.png" alt="logo" className="w-44 -ml-4"/></span></h1>
 
         <input
           type="email"
           placeholder="example@gmail.com"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
+          className="border border-black/20 bg-white/30 p-2 rounded-xl w-full mb-4 text-black"
           required
         />
 
@@ -84,13 +86,13 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="border p-2 rounded w-full mb-4"
+          className="border border-black/20 bg-white/30 p-2 rounded-xl w-full mb-4 text-black"
           required
         />
 
         <button
           type="submit"
-          className={`w-full bg-[#8e0909] text-white px-4 py-2 rounded-lg ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+          className={`w-full bg-[#8e0909] text-white px-4 py-2 cursor-pointer rounded-lg ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}

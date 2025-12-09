@@ -1,4 +1,5 @@
 'use client'
+import { Footer } from '@/components/footer/Footer'
 import Header from '@/components/header/Header'
 import MenuCard from '@/components/menuCard/MenuCard'
 import Navbar from '@/components/navbar/Navbar'
@@ -10,7 +11,7 @@ import React, { useState, useEffect } from 'react'
 
 export default function Page() {
 
-  // 🔥 MENU STATE (THE MAGIC)
+  //  menu state
   const [menuOpen, setMenuOpen] = useState(false)
 
 
@@ -59,7 +60,7 @@ export default function Page() {
       {/* Header gets toggle function */}
       <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
 
-      <div className='pt-16 md:pt-23 lg:pt-20 pb-28 relative'>
+      <div className='pt-16 md:pt-23 lg:pt-20 relative'>
 
         {/* HERO IMAGE */}
         <section className='w-full h-[35vh] lg:h-[48vh] overflow-hidden rounded-2xl relative'>
@@ -118,6 +119,7 @@ export default function Page() {
           onCloseMenu={() => setMenuOpen(false)}
         />
 
+      <Footer />
       </div>
     </main>
   )

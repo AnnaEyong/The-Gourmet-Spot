@@ -49,13 +49,13 @@ export default function ArchivePage() {
   return (
     <ProtectedRoute allowedRoles={['admin']}>
         <Nav />
-    <main className="container mx-auto pb-6 pt-22 px-10 bg-gray-50 min-h-screen">
-    <div className="flex justify-between items-center mb-6">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Archived Orders</h1>
+    <main className="container mx-auto pb-6 pt-22 px-10 bg-gray-50 dark:bg-black dark:text-white min-h-screen">
+    <div className="flex justify-between items-center">
+      <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">Archived Orders</h1>
 
       {/* DATE FILTER */}
       <div className="mb-6">
-        <label className="mr-2 font-medium text-gray-700">Filter by date:</label>
+        <label className="mr-2 font-medium text-gray-700 dark:text-white">Filter by date:</label>
         <input
           type="date"
           value={selectedDate}
@@ -65,7 +65,7 @@ export default function ArchivePage() {
         {selectedDate && (
           <button
             onClick={() => setSelectedDate("")}
-            className="ml-3 px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+            className="ml-3 px-3 py-1 bg-gray-200 dark:bg-gray-500 rounded hover:bg-gray-300 cursor-pointer"
           >
             Clear
           </button>
@@ -89,7 +89,7 @@ export default function ArchivePage() {
             );
 
             return (
-              <div key={order.id} className="bg-white shadow-lg rounded-xl border border-gray-200 p-5">
+              <div key={order.id} className="bg-white dark:bg-gray-900 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                 <div className="flex justify-between mb-4">
                   <h2 className="text-2xl font-semibold">Table {order.tableNumber}</h2>
                   <span className="px-3 py-1 bg-gray-400 text-white rounded-full font-medium">
@@ -104,7 +104,7 @@ export default function ArchivePage() {
 
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-300">
+                    <tr className="border-b border-gray-300 dark:border-gray-700">
                       <th className="pb-2">Name</th>
                       <th className="pb-2">Qty</th>
                       <th className="pb-2">Price</th>
@@ -114,7 +114,7 @@ export default function ArchivePage() {
                   </thead>
                   <tbody>
                     {order.items.map(item => (
-                      <tr key={item.id} className="border-b border-gray-200 text-sm">
+                      <tr key={item.id} className="border-b border-gray-200 dark:border-gray-700 text-sm">
                         <td className="py-2">{item.name}</td>
                         <td className="py-2">{item.qty}</td>
                         <td className="py-2">${item.price.toFixed(2)}</td>

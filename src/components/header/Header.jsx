@@ -42,7 +42,7 @@ export default function Header({ onToggleMenu }) {
         alt="Logo" 
         className='object-cover w-[50%] md:w-[35%] lg:w-[25%] '
       /> : 
-      <img src="/blackLogo.png" alt="Logo" className='splash-logo'/>}
+      <img src="/blackLogo.png" alt="Logo" className='object-cover w-[50%] md:w-[35%] lg:w-[25%]'/>}
 
       <ModeToggle/>
     </div>

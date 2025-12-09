@@ -36,10 +36,10 @@ export default function OrderStatusPage() {
 
   if (orders.length === 0) {
     return (
-      <main className="container mx-auto p-4">
+      <main className="container mx-auto p-4 dark:bg-black min-h-screen">
         <Header onToggleMenu={() => setMenuOpen(!menuOpen)} />
-        <div className="py-14 text-center">
-          <h1 className="text-2xl font-bold mb-4">No Active Orders</h1>
+        <div className="py-14 text-center flex flex-col items-center justify-center gap-2 min-h-screen">
+          <h1 className="text-2xl font-bold">No Active Orders</h1>
           <p className="text-gray-600">You currently have no ongoing orders.</p>
         </div>
         <Navbar menuOpen={menuOpen} onCloseMenu={() => setMenuOpen(false)} />
