@@ -26,11 +26,11 @@ export const metadata = {
     title: "The Gourmet Spot",
     description:
       "From appetizers to desserts, our meal ordering app brings you fresh, delicious food in just a few taps. Save your favorites, manage your cart, and enjoy secure, convenient checkout. Perfect for busy schedules, quick cravings, or meal planning.",
-    url: "https://www.freepik.com/free-photo/restaurant-interior_1243339.htm#fromView=search&page=1&position=1&uuid=ddd79a1b-a0b8-4fed-858b-21d4a836f297&query=dark+restaurant+picture", // update with your actual URL
+    url: "https://www.southernliving.com/thmb/YkeCguqjvAS-fj2DRtXzl-qzdEQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/07172024_Fancypants_Andrew-Cebulka-17221-bf58a5e4247941a4860d620fc72b22ed.jpg", // update with your actual URL
     siteName: "The Gourmet Spot",
     images: [
       {
-        url: "https://www.freepik.com/free-photo/restaurant-interior_1243339.htm#fromView=search&page=1&position=1&uuid=ddd79a1b-a0b8-4fed-858b-21d4a836f297&query=dark+restaurant+picture", // change this to your OG image URL
+        url: "https://www.southernliving.com/thmb/YkeCguqjvAS-fj2DRtXzl-qzdEQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/07172024_Fancypants_Andrew-Cebulka-17221-bf58a5e4247941a4860d620fc72b22ed.jpg", // change this to your OG image URL
         width: 1200,
         height: 630,
         alt: "The Gourmet Spot",
@@ -44,7 +44,7 @@ export const metadata = {
     title: "The Gourmet Spot",
     description:
       "Delicious meals, just a few taps away. Browse, order, and enjoy!",
-    images: "https://www.freepik.com/free-photo/restaurant-interior_1243339.htm#fromView=search&page=1&position=1&uuid=ddd79a1b-a0b8-4fed-858b-21d4a836f297&query=dark+restaurant+picture", // same image as above
+    images: "https://www.southernliving.com/thmb/YkeCguqjvAS-fj2DRtXzl-qzdEQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/07172024_Fancypants_Andrew-Cebulka-17221-bf58a5e4247941a4860d620fc72b22ed.jpg", // same image as above
     creator: "@yourhandle", // optional
   },
 };
