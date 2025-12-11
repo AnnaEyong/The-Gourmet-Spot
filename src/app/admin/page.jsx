@@ -176,7 +176,7 @@ export default function AdminPage() {
         ) : (
           <>
           <div className="flex justify-between items-center mb-4">
-            <h1 className="font-semibold text-2xl text-gray-800 dark:text-white">Kitchen Staff</h1>
+            <h1 className="font-semibold text-2xl text-gray-800 dark:text-white">Existing Users</h1>
             {/* SEARCH INPUT */}
             <input
               type="text"
