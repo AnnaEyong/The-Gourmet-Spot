@@ -33,6 +33,16 @@ export default function Page() {
   const cartSize = selectedAddedIds.length
 
   
+  // TABLE NUMBER LOGIC
+   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const table = params.get("table");
+
+    if (table) {
+      localStorage.setItem("tableNumber", table);
+    }
+  }, []);
+  
   // SPLASH SCREEN STATES
   const [showSplash, setShowSplash] = useState(true)
   const [animateOut, setAnimateOut] = useState(false)
@@ -53,6 +63,7 @@ export default function Page() {
       </div>
     )
   }
+
 
   return (
     <main className='bg-white dark:bg-black px-2 md:px-10'>

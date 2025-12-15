@@ -73,7 +73,7 @@ export default function LoginPage() {
       
       <div className='absolute backdrop-blur-[1px] w-full h-full flex justify-center items-center z-10'>
       <form onSubmit={handleLogin} className="bg-black/50 border border-white/30 p-8 rounded-xl shadow-2xl text-md w-full max-w-md">
-        <h1 className="text-2xl font-medium mb-4 text-white flex justify-center items-center">Login to<span><img src="logo.png" alt="logo" className="w-44 -ml-4"/></span></h1>
+        <h1 className="text-2xl font-medium mb-4 text-white flex justify-center items-center">Login</h1>
 
         <input
           type="email"

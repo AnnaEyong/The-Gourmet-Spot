@@ -1,20 +1,41 @@
-import QRCode from 'qrcode';
+// import QRCode from 'qrcode';
 
-/**
- * GÃŠnÃ¨re un QR Code au format Data URL depuis du texte
- */
-export const generateQRCodeDataUrl = async (data) => {
-    return await QRCode.toDataURL(data, {
-        width: 300,
-        margin: 2,
-        color: {
-            dark: '#000000',
-            light: '#FFFFFF'
-        }
-    });
+// /**
+//  * GÃŠnÃ¨re un QR Code au format Data URL depuis du texte
+//  */
+// export const generateQRCodeDataUrl = async (data) => {
+//     return await QRCode.toDataURL(data, {
+//         width: 300,
+//         margin: 2,
+//         color: {
+//             dark: '#000000',
+//             light: '#FFFFFF'
+//         }
+//     });
+// };
+
+// generateQRCodeDataUrl('https://the-gourmet-spot.vercel.app').then(url => {
+//     console.log(url); // Affiche le Data URL du QR Code
+// }).catch(err => {
+//     console.error('Erreur lors de la gÃŠnÃ¨ration du QR Code :', err);
+// })
+
+import QRCode from "qrcode";
+
+export const generateQRCodeDataUrl = async (tableNumber) => {
+  const url = `https://the-gourmet-spot.vercel.app?table=${tableNumber}`;
+
+  return await QRCode.toDataURL(url, {
+    width: 300,
+    margin: 2,
+    color: {
+      dark: "#000000",
+      light: "#FFFFFF",
+    },
+  });
 };
 
-generateQRCodeDataUrl('https://the-gourmet-spot.vercel.app').then(url => {
+generateQRCodeDataUrl(3).then(url => {
     console.log(url); // Affiche le Data URL du QR Code
 }).catch(err => {
     console.error('Erreur lors de la gÃŠnÃ¨ration du QR Code :', err);

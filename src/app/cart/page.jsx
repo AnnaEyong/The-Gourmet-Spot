@@ -4,7 +4,7 @@ import CartCard from "@/components/menuCard/CartCard";
 import Navbar from "@/components/navbar/Navbar";
 import { useStoreCart } from "@/store/cart.store";
 import { Dishes } from "@/utils/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -15,6 +15,14 @@ export default function CartPage() {
   const [tableNumber, setTableNumber] = useState("");
   const { selectedAddedIds, quantities, clearAll } = useStoreCart();
   const router = useRouter();
+
+    useEffect(() => {
+    const storedTable = localStorage.getItem("tableNumber");
+    if (storedTable) {
+      setTableNumber(storedTable);
+    }
+  }, []);
+
 
   const cartItems = Dishes.filter(dish => selectedAddedIds.includes(dish.id));
 
@@ -30,9 +38,10 @@ export default function CartPage() {
 
   const handlePlaceOrder = async () => {
     if (!tableNumber) {
-      alert("Please enter your table number before placing the order.");
+      alert("Please scan the QR code on your table to order.");
       return;
     }
+    // Please enter your table number before placing the order.
 
     // Generate customerId if not already present
     let customerId = localStorage.getItem("customerId");
@@ -90,7 +99,7 @@ export default function CartPage() {
               <CartCard key={item.id} dish={item} />
             ))}
 
-            <div className="mt-4 dark:text-white">
+            {/* <div className="mt-4 dark:text-white">
               <label className="block font-semibold mb-1">Table Number:</label>
               <input
                 type="text"
@@ -98,6 +107,16 @@ export default function CartPage() {
                 onChange={(e) => setTableNumber(e.target.value)}
                 className="border border-gray-300 dark:border-white/10 p-2 rounded-xl w-full"
                 placeholder="Enter your table number"
+              />
+            </div> */}
+
+            <div className="mt-4 dark:text-white">
+              <label className="block font-semibold mb-1">Table Number:</label>
+              <input
+                type="text"
+                value={tableNumber}
+                disabled
+                className="border border-gray-300 dark:border-white/10 p-2 rounded-xl w-full bg-gray-100 cursor-not-allowed"
               />
             </div>
 
